@@ -36,17 +36,17 @@ Effective inventory and sales management are critical for profitability in retai
 
 ```
 Raw CSVs (data/)
-      │  ingestion_db.py
+      │  Ingestion.ipynb
       ▼
 SQLite database (inventory.db)
       │  get_vendor_summary.py   (SQL joins + cleaning + feature engineering)
       ▼
 vendor_sales_summary table  ──►  vendor_sales_summary.csv
       │
-      ├──► Exploratory_Data_Analysis.ipynb   (understand tables, build the summary query)
-      ├──► Vendor_Performance_Analysis.ipynb (EDA, research questions, hypothesis test)
-      ├──► vendor_performance.pbix           (interactive dashboard)
-      └──► Vendor_Performance_Report.pdf     (written report)
+      ├──► Exploratory Data Analysis.ipynb    (understand tables, build the summary query)
+      ├──► Vendor Performance Analysis.ipynb  (EDA, research questions, hypothesis test)
+      ├──► vendor_performance.pbix            (interactive dashboard)
+      └──► Vendor Performance Report.pdf      (written report)
 ```
 
 ---
@@ -54,15 +54,14 @@ vendor_sales_summary table  ──►  vendor_sales_summary.csv
 ## Repository Structure
 
 ```
-├── data/                                # Raw source CSVs (not tracked, see "Data")
-├── logs/                                # Log files written by the scripts
-├── ingestion_db.py                      # Loads every CSV in data/ into SQLite
+Vendor-Performance-Data-Analytics-End-to-End-Project-/
+├── Ingestion.ipynb                      # Loads every CSV into SQLite
 ├── get_vendor_summary.py                # Builds and cleans the vendor_sales_summary table
-├── Exploratory_Data_Analysis.ipynb      # Database exploration + summary-table design
-├── Vendor_Performance_Analysis.ipynb    # Main analysis and statistical testing
+├── Exploratory Data Analysis.ipynb      # Database exploration + summary-table design
+├── Vendor Performance Analysis.ipynb    # Main analysis and statistical testing
 ├── vendor_sales_summary.csv             # Final aggregated dataset (10,692 rows × 18 columns)
 ├── vendor_performance.pbix              # Power BI dashboard
-├── Vendor_Performance_Report.pdf        # Full written report with charts
+├── Vendor Performance Report.pdf        # Full written report with charts
 └── README.md
 ```
 
@@ -119,8 +118,8 @@ One row per **vendor + brand + purchase price** combination (10,692 rows, 128 ve
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/<your-repo-name>.git
-cd <your-repo-name>
+git clone https://github.com/Sadeea2005/Vendor-Performance-Data-Analytics-End-to-End-Project-.git
+cd Vendor-Performance-Data-Analytics-End-to-End-Project-
 ```
 
 ### 2. Install dependencies
@@ -132,17 +131,16 @@ pip install pandas numpy matplotlib seaborn scipy sqlalchemy jupyter
 ### 3. Prepare folders
 
 ```bash
-mkdir -p data logs
-# copy the raw CSV files into data/
+mkdir data logs
 ```
 
-> The `logs/` folder must exist before running the scripts, since they write their log files there.
+Copy the raw CSV files into `data/`. The `logs/` folder must exist before running the scripts, since they write their log files there.
 
 ### 4. Run the pipeline
 
 ```bash
 # Step 1: load all CSVs from data/ into inventory.db
-python ingestion_db.py
+jupyter notebook Ingestion.ipynb
 
 # Step 2: build, clean and store the vendor_sales_summary table
 python get_vendor_summary.py
@@ -151,16 +149,24 @@ python get_vendor_summary.py
 ### 5. Explore the analysis
 
 ```bash
-jupyter notebook
+jupyter notebook "Exploratory Data Analysis.ipynb"
+jupyter notebook "Vendor Performance Analysis.ipynb"
 ```
 
-Open `Exploratory_Data_Analysis.ipynb` first, then `Vendor_Performance_Analysis.ipynb`. To work from the final dataset without rebuilding the database, load `vendor_sales_summary.csv` directly.
+To work from the final dataset without rebuilding the database, load `vendor_sales_summary.csv` directly:
+
+```python
+import pandas as pd
+
+df = pd.read_csv("vendor_sales_summary.csv")
+df.head()
+```
 
 ---
 
 ## Methodology
 
-### 1. Ingestion (`ingestion_db.py`)
+### 1. Ingestion (`Ingestion.ipynb`)
 Reads every `.csv` in `data/`, writes each to SQLite using the filename as the table name, and logs progress and total run time.
 
 ### 2. Aggregation and cleaning (`get_vendor_summary.py`)
@@ -202,7 +208,7 @@ Summary statistics, distributions, boxplots and a correlation heatmap. Records w
 - Faster stock turnover does not translate into higher profitability (weak negative correlation with gross profit and margin).
 - Some products were purchased but never sold, and some records show negative gross profit (minimum around −$52K).
 
-Full charts and tables are in [`Vendor_Performance_Report.pdf`](Vendor_Performance_Report.pdf).
+Full charts and tables are in [`Vendor Performance Report.pdf`](Vendor%20Performance%20Report.pdf).
 
 ---
 
